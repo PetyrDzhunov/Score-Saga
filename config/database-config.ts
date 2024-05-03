@@ -1,6 +1,5 @@
 const { Sequelize } = require('sequelize');
-import { Client } from 'pg';
-
+import { config } from 'dotenv';
 // const sequelize = new Sequelize(
 //   'postgresql://app:94M39oMpou5P4x9260SxAlCD@quietly-cunning-stingray.a1.pgedge.io/scoresaga?sslmode=no-verify',
 //   {
@@ -9,13 +8,16 @@ import { Client } from 'pg';
 //   },
 // );
 
+const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
+config({ path: envFile });
+
 const sequelize = new Sequelize({
-  dialect: 'postgres',
-  host: 'localhost',
-  port: '5432',
-  username: 'postgres',
-  password: 'pecata941102',
-  database: 'postgres',
+  dialect: process.env.DIALECT,
+  host: process.env.HOST,
+  port: process.env.DB_PORT,
+  username: process.env.DB_USERNAME,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
 });
 
 const connectDB = async () => {
