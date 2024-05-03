@@ -1,6 +1,7 @@
 require('dotenv').config();
 
-const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
+const envFile =
+  process.env.NODE_ENV === 'production' ? '.env.production' : '.env.local';
 dotenv.config({ path: envFile });
 
 module.exports = {

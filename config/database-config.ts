@@ -8,7 +8,8 @@ import { config } from 'dotenv';
 //   },
 // );
 
-const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
+const envFile =
+  process.env.NODE_ENV === 'production' ? '.env.production' : '.env.local';
 config({ path: envFile });
 
 const sequelize = new Sequelize({
@@ -24,7 +25,7 @@ const connectDB = async () => {
   console.log('Connecting to the database...');
   try {
     await sequelize.authenticate();
-    console.log('connected');
+    console.log('Connected to PostgreSQL sucessfully!');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
