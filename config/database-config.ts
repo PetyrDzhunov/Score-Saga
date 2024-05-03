@@ -1,5 +1,6 @@
 const { Sequelize } = require('sequelize');
-import { config } from 'dotenv';
+const { readEnvironmentFile } = require('./envFile');
+
 // const sequelize = new Sequelize(
 //   'postgresql://app:94M39oMpou5P4x9260SxAlCD@quietly-cunning-stingray.a1.pgedge.io/scoresaga?sslmode=no-verify',
 //   {
@@ -7,10 +8,7 @@ import { config } from 'dotenv';
 //     logging: (...msg) => console.log(msg), // Displays all log function call parameters
 //   },
 // );
-
-const envFile =
-  process.env.NODE_ENV === 'production' ? '.env.production' : '.env.local';
-config({ path: envFile });
+readEnvironmentFile();
 
 const sequelize = new Sequelize({
   dialect: process.env.DIALECT,

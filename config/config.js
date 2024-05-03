@@ -1,16 +1,11 @@
-require('dotenv').config();
-
-const envFile =
-  process.env.NODE_ENV === 'production' ? '.env.production' : '.env.local';
-dotenv.config({ path: envFile });
+const { readEnvironmentFile } = require('./envFile');
+readEnvironmentFile();
 
 module.exports = {
-  development: {
-    dialect: process.env.DIALECT,
-    host: process.env.HOST,
-    port: process.env.DB_PORT,
-    username: process.env.DB_USERNAME,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
-  },
+  dialect: process.env.DIALECT,
+  host: process.env.HOST,
+  port: process.env.DB_PORT,
+  username: process.env.DB_USERNAME,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
 };
