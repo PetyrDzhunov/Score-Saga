@@ -1,12 +1,15 @@
 const express = require('express');
 const app = express();
-const port = 3000;
 const routes = require('../routes');
-const { connectDB } = require('../config/database-config');
+const dotenv = require('dotenv');
+const { connectDB, main } = require('../config/database-config');
 
+const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.local';
+dotenv.config({ path: envFile });
 connectDB();
+app.use(express.json());
 
 app.use(routes);
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Example app listening on port ${process.env.PORT}`);
 });

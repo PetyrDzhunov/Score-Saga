@@ -1,31 +1,24 @@
-'use strict';
-const { Model, Sequelize } = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    static associate(models) {
-      User.hasMany(models.Prediction, { as: 'Predictions' });
-      User.hasMany(models.Friend, { as: 'Friends' });
-    }
-  }
-  User.init(
-    {
-      username: DataTypes.STRING,
-      email: DataTypes.STRING,
-      password: DataTypes.STRING,
-      avatar: DataTypes.STRING,
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-    },
-    {
-      sequelize,
-      modelName: 'User',
-    },
-  );
-  return User;
-};
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/database-config'); // Import Sequelize instance
+
+const User = sequelize.define('Users', {
+  username: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  avatar: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+});
+
+module.exports = User;
