@@ -22,6 +22,5 @@ router.post('/', async (req, res, next) => {
     next(error);
   }
 });
-router.get('/', () => console.log('here here '));
 
 module.exports = router;

@@ -9,7 +9,7 @@ class DatabaseError extends CustomError {
   constructor(err) {
     super();
     this.status = 500;
-    this.message = err.errors[0].message || 'Database Error';
+    this.message = 'Database Error';
     this.detail = err.original.detail;
     this.original = err.original;
   }

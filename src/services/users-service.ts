@@ -16,10 +16,8 @@ const createUser = async (
   password: string,
   avatar: string,
 ) => {
-  console.log(isValidUsername(username));
-  console.log(isValidEmail(email));
   if (!isValidUsername(username) || !isValidEmail(email)) {
-    throw new CustomError('Username or email entered is wrong!', 500);
+    throw new CustomError('Username or email is wrong!', 500);
   }
 
   try {
@@ -31,7 +29,6 @@ const createUser = async (
     });
     return newUser;
   } catch (err) {
-    console.log(err);
     throw new DatabaseError(err);
   }
 };
