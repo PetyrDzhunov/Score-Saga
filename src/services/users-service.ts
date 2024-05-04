@@ -1,4 +1,14 @@
 const User = require('../../models/user');
+const { isValidEmail, isValidUsername } = require('../utils/users-utils');
+const { CustomError, DatabaseError } = require('../utils/error-utils.js');
+
+const getAllUsers = async () => {
+  try {
+    return await User.findAll();
+  } catch (err) {
+    throw new DatabaseError(err);
+  }
+};
 
 const createUser = async (
   username: string,
@@ -6,23 +16,24 @@ const createUser = async (
   password: string,
   avatar: string,
 ) => {
-  // add validation rules
-  if (!username || !email || !password) {
-    throw new Error('Username, email, and password are required');
+  console.log(isValidUsername(username));
+  console.log(isValidEmail(email));
+  if (!isValidUsername(username) || !isValidEmail(email)) {
+    throw new CustomError('Username or email entered is wrong!', 500);
   }
-  let newUser;
+
   try {
-    newUser = await User.create({
+    const newUser = await User.create({
       username,
       email,
       password,
       avatar,
     });
+    return newUser;
   } catch (err) {
-    throw err;
+    console.log(err);
+    throw new DatabaseError(err);
   }
-
-  return newUser;
 };
 
-module.exports = { createUser };
+module.exports = { createUser, getAllUsers };
