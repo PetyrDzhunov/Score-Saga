@@ -6,6 +6,7 @@ const {
   getAllUsers,
   getOneUser,
   deleteOneUser,
+  getAllPredictionsForUser,
 } = require('../services/users-service');
 
 router.get('/', async (req, res, next) => {
@@ -21,6 +22,15 @@ router.get('/:id', async (req, res, next) => {
   try {
     const user = await getOneUser(req.params.id);
     res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/:id/predictions', async (req, res, next) => {
+  try {
+    const predictions = await getAllPredictionsForUser(req.params.id);
+    res.status(200).json(predictions);
   } catch (error) {
     next(error);
   }

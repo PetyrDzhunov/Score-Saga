@@ -1,17 +1,38 @@
 const Prediction = require('../../models/prediction.js');
-const { DatabaseError } = require('../utils/error-utils.js');
+const { DatabaseError, CustomError } = require('../utils/error-utils.js');
+const { getOneUser } = require('./users-service.js');
 
-const createPrediction = async (userId, prediction) => {
+const getAllPredictions = async () => {
   try {
-    const newPrediction = await Prediction.create({
-      userId,
-      prediction,
-    });
-    return newPrediction;
+    const allPredictions = await Prediction.findAll();
+    return allPredictions;
   } catch (err) {
-    console.error(err);
-    // throw new DatabaseError(err);
+    throw DatabaseError(err);
   }
 };
 
-module.exports = { createPrediction };
+const createPrediction = async (userId, prediction) => {
+  try {
+    const newPrediction = await Prediction.create(
+      {
+        prediction,
+        userId,
+      },
+      {
+        returning: ['id', 'prediction', 'createdAt', 'updatedAt'],
+      },
+    );
+    const user = await getOneUser(userId);
+    if (!user) {
+      throw new CustomError('User not found', 404);
+    }
+    await user.addPredictions(newPrediction);
+
+    return newPrediction;
+  } catch (err) {
+    console.log(err);
+    throw new DatabaseError(err);
+  }
+};
+
+module.exports = { createPrediction, getAllPredictions };

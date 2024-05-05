@@ -44,4 +44,24 @@ const deleteOneUser = async (id) => {
   }
 };
 
-module.exports = { createUser, getAllUsers, getOneUser, deleteOneUser };
+const getAllPredictionsForUser = async (userId) => {
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      throw new CustomError('User not found', 404);
+    }
+    const predictions = await user.getPredictions();
+    return predictions;
+  } catch (err) {
+    console.log(err);
+    throw new DatabaseError(err);
+  }
+};
+
+module.exports = {
+  createUser,
+  getAllUsers,
+  getOneUser,
+  deleteOneUser,
+  getAllPredictionsForUser,
+};

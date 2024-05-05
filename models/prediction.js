@@ -1,23 +1,29 @@
-'use strict';
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database-config'); // Import Sequelize instance
-const User = require('./user');
+const { DataTypes, Model } = require('sequelize');
+const { sequelize } = require('../config/database-config');
 
-const Prediction = sequelize.define(
-  'Prediction',
+class Prediction extends Model {}
+
+Prediction.init(
   {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    matchId: DataTypes.STRING,
-    prediction: DataTypes.STRING,
-    userId: DataTypes.STRING,
+    // matchId: {
+    //   type: DataTypes.UUID,
+    //   allowNull: true,
+    // },
+    prediction: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
-  { tableName: 'Predictions' },
+  {
+    sequelize,
+    modelName: 'Prediction',
+    tableName: 'Predictions',
+  },
 );
-
-// Prediction.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 module.exports = Prediction;

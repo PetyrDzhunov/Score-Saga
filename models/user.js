@@ -1,9 +1,10 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database-config'); // Import Sequelize instance
+const { DataTypes, Model } = require('sequelize');
+const { sequelize } = require('../config/database-config');
 const Prediction = require('./prediction');
 
-const User = sequelize.define(
-  'User',
+class User extends Model {}
+
+User.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -28,10 +29,6 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    predictions: {
-      type: DataTypes.ARRAY(DataTypes.JSON),
-      defaultValue: [],
-    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -42,10 +39,13 @@ const User = sequelize.define(
     },
   },
   {
+    sequelize,
+    modelName: 'User',
     tableName: 'Users',
   },
 );
 
-User.hasMany(Prediction, { as: 'predictionsArray' });
+User.hasMany(Prediction);
+Prediction.belongsTo(User);
 
 module.exports = User;
