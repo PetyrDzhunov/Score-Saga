@@ -1,5 +1,5 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Predictions', {
@@ -9,17 +9,29 @@ module.exports = {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
       },
-      matchId: {
-        allowNull: true,
-        type: Sequelize.STRING,
-      },
+      // matchId: {
+      //   type: Sequelize.UUID,
+      //   allowNull: true,
+      //   references: {
+      //     model: 'Matches',
+      //     key: 'id',
+      //   },
+      //   onUpdate: 'CASCADE',
+      //   onDelete: 'CASCADE',
+      // },
       prediction: {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      users: {
-        type: Sequelize.ARRAY(Sequelize.UUID),
-        defaultValue: [],
+      userId: {
+        type: Sequelize.UUID,
+        allowNull: true,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       createdAt: {
         allowNull: false,

@@ -1,7 +1,6 @@
-const User = require('../../models/user');
-const { isValidEmail, isValidUsername } = require('../utils/users-utils');
+const User = require('../../models/user.js');
+const { isValidEmail, isValidUsername } = require('../utils/users-utils.js');
 const { CustomError, DatabaseError } = require('../utils/error-utils.js');
-import { where } from 'sequelize';
 
 const getAllUsers = async () => {
   try {
@@ -11,7 +10,7 @@ const getAllUsers = async () => {
   }
 };
 
-const getOneUser = async (id: string) => {
+const getOneUser = async (id) => {
   try {
     return await User.findByPk(id);
   } catch (err) {
@@ -19,12 +18,7 @@ const getOneUser = async (id: string) => {
   }
 };
 
-const createUser = async (
-  username: string,
-  email: string,
-  password: string,
-  avatar: string,
-) => {
+const createUser = async (username, email, password, avatar) => {
   if (!isValidUsername(username) || !isValidEmail(email)) {
     throw new CustomError('Username or email is wrong!', 500);
   }
@@ -42,7 +36,7 @@ const createUser = async (
   }
 };
 
-const deleteOneUser = async (id: string) => {
+const deleteOneUser = async (id) => {
   try {
     return await User.destroy({ where: { id } });
   } catch (err) {

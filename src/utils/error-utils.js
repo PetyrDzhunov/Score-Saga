@@ -16,7 +16,11 @@ class DatabaseError extends CustomError {
   }
 
   getDatabaseErrorMessage(original) {
-    if (original.detail.includes('already exists')) {
+    if (
+      original &&
+      original.detail &&
+      original.detail.includes('already exists')
+    ) {
       return 'Unable to create user. Please try again later.';
     }
     return null;

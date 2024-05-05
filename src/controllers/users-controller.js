@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router(); // Create a router instance
+const router = express.Router();
 
 const {
   createUser,
@@ -20,6 +20,15 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try {
     const user = await getOneUser(req.params.id);
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put('/:id', async (req, res, next) => {
+  try {
+    const user = await updateOneUser(req.params.id);
     res.status(200).json(user);
   } catch (error) {
     next(error);

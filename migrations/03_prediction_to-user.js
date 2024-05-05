@@ -2,10 +2,9 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // Add the new column to the Users table
     await queryInterface.addColumn('Users', 'predictions', {
       type: Sequelize.ARRAY(Sequelize.STRING),
-      allowNull: true, // Specify whether the column allows NULL values
+      allowNull: true,
       defaultValue: [],
     });
   },

@@ -1,8 +1,7 @@
 const express = require('express');
 const app = express();
-const routes = require('../routes');
-const dotenv = require('dotenv');
-const { connectDB, main } = require('../config/database-config');
+const routes = require('../routes.js');
+const { connectDB, main } = require('../config/database-config.js');
 const errorHandler = require('./middlewares/error-handler.js');
 const { readEnvironmentFile } = require('../config/envFile.js');
 
