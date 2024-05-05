@@ -1,10 +1,19 @@
 const User = require('../../models/user');
 const { isValidEmail, isValidUsername } = require('../utils/users-utils');
 const { CustomError, DatabaseError } = require('../utils/error-utils.js');
+import { where } from 'sequelize';
 
 const getAllUsers = async () => {
   try {
     return await User.findAll();
+  } catch (err) {
+    throw new DatabaseError(err);
+  }
+};
+
+const getOneUser = async (id: string) => {
+  try {
+    return await User.findByPk(id);
   } catch (err) {
     throw new DatabaseError(err);
   }
@@ -33,4 +42,12 @@ const createUser = async (
   }
 };
 
-module.exports = { createUser, getAllUsers };
+const deleteOneUser = async (id: string) => {
+  try {
+    return await User.destroy({ where: { id } });
+  } catch (err) {
+    throw new DatabaseError(err);
+  }
+};
+
+module.exports = { createUser, getAllUsers, getOneUser, deleteOneUser };
