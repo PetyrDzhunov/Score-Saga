@@ -11,6 +11,24 @@ const getAllPredictions = async () => {
   }
 };
 
+const getOnePrediction = async (id) => {
+  try {
+    const prediction = await Prediction.findByPk(id);
+    return prediction;
+  } catch (err) {
+    throw DatabaseError(err);
+  }
+};
+
+const updatePrediction = (prediction) => {
+  // should find the unique prediction by Prediction,userId and matchId, because user can have only one prediction per match
+  try {
+    // const
+  } catch (err) {
+    throw DatabaseError(err);
+  }
+};
+
 const createPrediction = async (userId, prediction) => {
   try {
     const newPrediction = await Prediction.create(
@@ -35,4 +53,4 @@ const createPrediction = async (userId, prediction) => {
   }
 };
 
-module.exports = { createPrediction, getAllPredictions };
+module.exports = { createPrediction, getAllPredictions, getOnePrediction };

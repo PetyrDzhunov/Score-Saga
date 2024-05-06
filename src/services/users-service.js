@@ -53,7 +53,6 @@ const getAllPredictionsForUser = async (userId) => {
     const predictions = await user.getPredictions();
     return predictions;
   } catch (err) {
-    console.log(err);
     throw new DatabaseError(err);
   }
 };
