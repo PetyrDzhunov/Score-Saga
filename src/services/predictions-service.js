@@ -1,6 +1,7 @@
 const Prediction = require('../../models/prediction.js');
 const { DatabaseError, CustomError } = require('../utils/error-utils.js');
 const { getOneUser } = require('./users-service.js');
+const { getOneMatch } = require('./match-service.js');
 
 const getAllPredictions = async () => {
   try {
@@ -29,15 +30,16 @@ const updatePrediction = (prediction) => {
   }
 };
 
-const createPrediction = async (userId, prediction) => {
+const createPrediction = async (userId, prediction, matchId) => {
   try {
     const newPrediction = await Prediction.create(
       {
         prediction,
         userId,
+        matchId,
       },
       {
-        returning: ['id', 'prediction', 'createdAt', 'updatedAt'],
+        returning: ['id', 'prediction', 'createdAt', 'updatedAt', 'MatchId'],
       },
     );
     const user = await getOneUser(userId);
@@ -45,7 +47,11 @@ const createPrediction = async (userId, prediction) => {
       throw new CustomError('User not found', 404);
     }
     await user.addPredictions(newPrediction);
-
+    const match = await getOneMatch(matchId);
+    if (!match) {
+      throw new CustomError('Match not found', 404);
+    }
+    await match.addPredictions(newPrediction);
     return newPrediction;
   } catch (err) {
     console.log(err);

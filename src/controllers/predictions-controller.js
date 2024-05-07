@@ -15,13 +15,12 @@ router.get('/', async (req, res, next) => {
 });
 router.post('/', async (req, res, next) => {
   try {
-    const { userId, prediction } = req.body;
-    const newUser = await createPrediction(userId, prediction);
-    res.status(201).json(newUser);
+    const { userId, prediction, matchId } = req.body;
+    const newPrediction = await createPrediction(userId, prediction, matchId);
+    res.status(201).json(newPrediction);
   } catch (error) {
     next(error);
   }
 });
 
-getAllPredictions;
 module.exports = router;

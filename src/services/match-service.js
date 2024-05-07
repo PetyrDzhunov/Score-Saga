@@ -43,4 +43,12 @@ const getNextFixtures = async () => {
   }
 };
 
-module.exports = { getNextFixtures };
+const getOneMatch = async (id) => {
+  try {
+    return await Match.findByPk(id);
+  } catch (err) {
+    throw new DatabaseError(err);
+  }
+};
+
+module.exports = { getNextFixtures, getOneMatch };

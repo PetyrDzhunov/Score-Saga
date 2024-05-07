@@ -10,10 +10,6 @@ Prediction.init(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    // matchId: {
-    //   type: DataTypes.UUID,
-    //   allowNull: true,
-    // },
     prediction: {
       type: DataTypes.STRING,
       allowNull: true,
