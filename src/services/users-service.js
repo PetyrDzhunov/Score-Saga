@@ -1,23 +1,35 @@
-const User = require('../../models/user.js');
-const { isValidEmail, isValidUsername } = require('../utils/users-utils.js');
-const { CustomError, DatabaseError } = require('../utils/error-utils.js');
-const { SALT_ROUNDS } = require('../constants.js');
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
+const User = require('../../models/user.js');
+const { SALT_ROUNDS } = require('../constants.js');
+const {
+  isValidEmail,
+  isValidUsername,
+  generateToken,
+} = require('../utils/users-utils.js');
+const { CustomError, handleError } = require('../utils/error-utils.js');
 
 const getAllUsers = async () => {
   try {
     return await User.findAll();
   } catch (err) {
-    throw new DatabaseError(err);
+    handleError(err);
   }
 };
 
-const getOneUser = async (id) => {
+const getUserByUsername = async (username) => {
+  try {
+    return await User.findOne({ where: { username } });
+  } catch (err) {
+    handleError(err);
+  }
+};
+
+const getOneUserById = async (id) => {
   try {
     return await User.findByPk(id);
   } catch (err) {
-    throw new DatabaseError(err);
+    handleError(err);
   }
 };
 
@@ -34,9 +46,11 @@ const registerUser = async (username, email, password, avatar) => {
       password: hashedPassword,
       avatar,
     });
-    return newUser;
+    const token = generateToken(newUser);
+
+    return { user: newUser, token };
   } catch (err) {
-    throw new DatabaseError(err);
+    handleError(err);
   }
 };
 
@@ -60,10 +74,10 @@ const loginUser = async (usernameOrEmail, password) => {
     if (!isRightPassword) {
       throw new CustomError('Username, email or password is wrong!', 500);
     }
-
-    return userToLogin;
+    const token = generateToken(userToLogin);
+    return { user: userToLogin, token };
   } catch (err) {
-    throw new DatabaseError(err);
+    handleError(err);
   }
 };
 
@@ -71,7 +85,7 @@ const deleteOneUser = async (id) => {
   try {
     return await User.destroy({ where: { id } });
   } catch (err) {
-    throw new DatabaseError(err);
+    handleError(err);
   }
 };
 
@@ -84,7 +98,7 @@ const getAllPredictionsForUser = async (userId) => {
     const predictions = await user.getPredictions();
     return predictions;
   } catch (err) {
-    throw new DatabaseError(err);
+    handleError(err);
   }
 };
 
@@ -92,7 +106,8 @@ module.exports = {
   registerUser,
   loginUser,
   getAllUsers,
-  getOneUser,
+  getOneUserById,
+  getUserByUsername,
   deleteOneUser,
   getAllPredictionsForUser,
 };

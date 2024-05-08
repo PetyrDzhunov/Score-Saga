@@ -20,4 +20,12 @@ class DatabaseError extends CustomError {
   }
 }
 
-module.exports = { CustomError, DatabaseError };
+const handleError = (err) => {
+  if (err instanceof CustomError) {
+    throw err;
+  } else {
+    throw new DatabaseError(err);
+  }
+};
+
+module.exports = { CustomError, DatabaseError, handleError };

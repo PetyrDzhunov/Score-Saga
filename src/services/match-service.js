@@ -1,11 +1,11 @@
-const User = require('../../models/user.js');
-const { DatabaseError } = require('../utils/error-utils.js');
+const { handleError } = require('../utils/error-utils.js');
 const {
   options,
   roundUrl,
   fixtureUrl,
 } = require('../../config/football-api-config.js');
 const Match = require('../../models/match.js');
+const { createMatchFromFixture } = require('../utils/matches-utils.js');
 
 const getNextFixtures = async () => {
   try {
@@ -16,30 +16,21 @@ const getNextFixtures = async () => {
     const fixtures = await fetch(finalUrlForFixtures, options);
     const finalFixtures = await fixtures.json();
 
-    const promises = finalFixtures.response.map((object) => {
-      const { fixture, teams, goals } = object;
-      const { venue, status } = fixture;
-      const { home, away } = teams;
-
-      return Match.create({
-        venue: venue.name,
-        status: status.short,
-        homeTeamName: home.name,
-        homeTeamLogo: home.logo,
-        homeTeamGoals: goals.home,
-        homeTeamWinner: home.winner,
-        awayTeamName: away.name,
-        awayTeamLogo: away.logo,
-        awayTeamGoals: goals.away,
-        awayTeamWinner: away.winner,
-      });
-    });
+    const promises = finalFixtures.response.map(createMatchFromFixture);
 
     await Promise.all(promises);
 
     return { success: true };
   } catch (err) {
-    throw new DatabaseError(err);
+    handleError(err);
+  }
+};
+
+const getAllMatches = async () => {
+  try {
+    return await Match.findAll();
+  } catch (err) {
+    handleError(err);
   }
 };
 
@@ -47,8 +38,8 @@ const getOneMatch = async (id) => {
   try {
     return await Match.findByPk(id);
   } catch (err) {
-    throw new DatabaseError(err);
+    handleError(err);
   }
 };
 
-module.exports = { getNextFixtures, getOneMatch };
+module.exports = { getNextFixtures, getOneMatch, getAllMatches };

@@ -4,8 +4,9 @@ const {
   createPrediction,
   getAllPredictions,
 } = require('../services/predictions-service');
+const authenticationMiddleware = require('../middlewares/auth-middleware');
 
-router.get('/', async (req, res, next) => {
+router.get('/', authenticationMiddleware, async (req, res, next) => {
   try {
     const allPredictions = await getAllPredictions();
     res.status(201).json(allPredictions);
@@ -13,7 +14,8 @@ router.get('/', async (req, res, next) => {
     next(error);
   }
 });
-router.post('/', async (req, res, next) => {
+
+router.post('/', authenticationMiddleware, async (req, res, next) => {
   try {
     const { userId, prediction, matchId } = req.body;
     const newPrediction = await createPrediction(userId, prediction, matchId);

@@ -50,8 +50,13 @@ router.post('/register', async (req, res, next) => {
   try {
     const { username, email, password, avatar } = req.body;
 
-    const newUser = await registerUser(username, email, password, avatar);
-    res.status(201).json(newUser);
+    const { user, token } = await registerUser(
+      username,
+      email,
+      password,
+      avatar,
+    );
+    res.status(201).json({ user, token });
   } catch (error) {
     next(error);
   }
@@ -60,8 +65,8 @@ router.post('/register', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
   try {
     const { usernameOrEmail, password } = req.body;
-    const user = await loginUser(usernameOrEmail, password);
-    res.status(201).json(user);
+    const { token, user } = await loginUser(usernameOrEmail, password);
+    res.status(201).json({ user, token });
   } catch (error) {
     next(error);
   }
