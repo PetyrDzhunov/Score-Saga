@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const {
-  createUser,
+  registerUser,
+  loginUser,
   getAllUsers,
   getOneUser,
   deleteOneUser,
@@ -45,12 +46,22 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/register', async (req, res, next) => {
   try {
     const { username, email, password, avatar } = req.body;
 
-    const newUser = await createUser(username, email, password, avatar);
+    const newUser = await registerUser(username, email, password, avatar);
     res.status(201).json(newUser);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/login', async (req, res, next) => {
+  try {
+    const { usernameOrEmail, password } = req.body;
+    const user = await loginUser(usernameOrEmail, password);
+    res.status(201).json(user);
   } catch (error) {
     next(error);
   }

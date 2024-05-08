@@ -2,6 +2,7 @@ const Prediction = require('../../models/prediction.js');
 const { DatabaseError, CustomError } = require('../utils/error-utils.js');
 const { getOneUser } = require('./users-service.js');
 const { getOneMatch } = require('./match-service.js');
+const { isValidPrediction } = require('../utils/prediction-utils.js');
 
 const getAllPredictions = async () => {
   try {
@@ -31,6 +32,9 @@ const updatePrediction = (prediction) => {
 };
 
 const createPrediction = async (userId, prediction, matchId) => {
+  if (isValidPrediction()) {
+    throw new CustomError('Invalid prediction', 404);
+  }
   try {
     const newPrediction = await Prediction.create(
       {
@@ -39,7 +43,7 @@ const createPrediction = async (userId, prediction, matchId) => {
         matchId,
       },
       {
-        returning: ['id', 'prediction', 'createdAt', 'updatedAt', 'MatchId'],
+        returning: ['id', 'prediction', 'createdAt', 'updatedAt'],
       },
     );
     const user = await getOneUser(userId);
@@ -54,7 +58,6 @@ const createPrediction = async (userId, prediction, matchId) => {
     await match.addPredictions(newPrediction);
     return newPrediction;
   } catch (err) {
-    console.log(err);
     throw new DatabaseError(err);
   }
 };

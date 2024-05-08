@@ -9,21 +9,14 @@ class DatabaseError extends CustomError {
   constructor(err) {
     super();
     this.status = 500;
-    this.message =
-      this.getDatabaseErrorMessage(err.original) || 'Database Error';
-    this.detail = err.original.detail;
-    this.original = err.original;
+    this.message = 'Database Error';
+    this.error = err;
+
+    this.logError(err);
   }
 
-  getDatabaseErrorMessage(original) {
-    if (
-      original &&
-      original.detail &&
-      original.detail.includes('already exists')
-    ) {
-      return 'Unable to create user. Please try again later.';
-    }
-    return null;
+  logError(err) {
+    console.error('\x1b[31m', err, '\x1b[0m');
   }
 }
 
