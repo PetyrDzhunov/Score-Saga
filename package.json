@@ -21,7 +21,10 @@
     "pg": "^8.11.5",
     "pg-hstore": "^2.3.4",
     "psql": "^0.0.1",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",

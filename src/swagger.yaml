@@ -1,0 +1,118 @@
+openapi: 3.0.0
+info:
+  title: Score Saga API documentation
+  version: 0.1
+  description: This is an API made with Express and documented with Swagger
+  contact:
+    email: petar.dzhunov94@gmail.com
+servers:
+  - url: http://localhost:3000/
+paths:
+  /users:
+    get:
+      summary: Get all users
+      description: Retrieve a list of all users.
+      responses:
+        '200':
+          description: A list of users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  /users/register:
+    post:
+      summary: Register a new user
+      description: Register a new user with the provided information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                avatar:
+                  type: string
+              required:
+                - username
+                - email
+                - password
+      responses:
+        '201':
+          description: User registered successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+  /users/login:
+    post:
+      summary: Login user
+      description: Login user with the provided credentials.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                usernameOrEmail:
+                  type: string
+                password:
+                  type: string
+              required:
+                - usernameOrEmail
+                - password
+      responses:
+        '201':
+          description: User logged in successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the user.
+        username:
+          type: string
+          description: The username of the user.
+        email:
+          type: string
+          format: email
+          description: The email address of the user.
+        password:
+          type: string
+          description: The password of the user.
+        avatar:
+          type: string
+          description: The avatar URL of the user.
+        createdAt:
+          type: string
+          format: date-time
+          description: The creation date of the user.
+        updatedAt:
+          type: string
+          format: date-time
+          description: The last update date of the user.

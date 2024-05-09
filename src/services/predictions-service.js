@@ -55,7 +55,6 @@ const createPrediction = async (userId, prediction, matchId) => {
         returning: ['id', 'prediction', 'createdAt', 'updatedAt'],
       },
     );
-
     const user = await getOneUserById(userId);
 
     if (!user) {
