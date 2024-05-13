@@ -5,7 +5,7 @@ const {
   registerUser,
   loginUser,
   getAllUsers,
-  getOneUser,
+  getOneUserById,
   deleteOneUser,
   getAllPredictionsForUser,
 } = require('../services/users-service');
@@ -21,7 +21,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    const user = await getOneUser(req.params.id);
+    const user = await getOneUserById(req.params.id);
     res.status(200).json(user);
   } catch (error) {
     next(error);

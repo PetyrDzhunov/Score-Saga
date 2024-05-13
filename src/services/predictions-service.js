@@ -22,10 +22,26 @@ const getOnePrediction = async (id) => {
   }
 };
 
-const updatePrediction = (prediction) => {
+const updatePrediction = async (userId, prediction, matchId) => {
   // should find the unique prediction by Prediction,userId and matchId, because user can have only one prediction per match
+  if (!isValidPrediction(prediction)) {
+    throw new CustomError('Invalid prediction', 404);
+  }
+
+  const existingPrediction = await Prediction.findOne({
+    where: { UserId: userId, MatchId: matchId },
+  });
+
+  if (!existingPrediction) {
+    throw new CustomError('Prediction not found', 404);
+  }
+
+  existingPrediction.prediction = prediction;
+  await existingPrediction.save();
+
+  res.status(200).json(existingPrediction);
+
   try {
-    // const
   } catch (err) {
     handleError(err);
   }
