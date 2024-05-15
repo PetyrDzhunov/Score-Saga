@@ -23,7 +23,6 @@ const getOnePrediction = async (id) => {
 };
 
 const updatePrediction = async (userId, prediction, matchId) => {
-  // should find the unique prediction by Prediction,userId and matchId, because user can have only one prediction per match
   if (!isValidPrediction(prediction)) {
     throw new CustomError('Invalid prediction', 404);
   }
@@ -36,12 +35,14 @@ const updatePrediction = async (userId, prediction, matchId) => {
     throw new CustomError('Prediction not found', 404);
   }
 
-  existingPrediction.prediction = prediction;
-  await existingPrediction.save();
-
-  res.status(200).json(existingPrediction);
+  if (existingPrediction.prediction === prediction) {
+    throw new CustomError(`Prediction is already ${prediction}`, 404);
+  }
 
   try {
+    existingPrediction.prediction = prediction;
+    await existingPrediction.save();
+    return existingPrediction;
   } catch (err) {
     handleError(err);
   }
@@ -90,4 +91,18 @@ const createPrediction = async (userId, prediction, matchId) => {
   }
 };
 
-module.exports = { createPrediction, getAllPredictions, getOnePrediction };
+const deleteOnePrediction = async (id) => {
+  try {
+    return await Prediction.destroy({ where: { id } });
+  } catch (err) {
+    handleError(err);
+  }
+};
+
+module.exports = {
+  createPrediction,
+  getAllPredictions,
+  getOnePrediction,
+  updatePrediction,
+  deleteOnePrediction,
+};

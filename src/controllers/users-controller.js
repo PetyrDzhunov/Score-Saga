@@ -75,7 +75,7 @@ router.post('/login', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   try {
     await deleteOneUser(req.params.id);
-    res.status(204).json({ success: true });
+    res.status(204).json({ message: 'Successfully deleted User!' });
   } catch (error) {
     next(error);
   }
