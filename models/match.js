@@ -41,6 +41,10 @@ Match.init(
     awayTeamWinner: {
       type: DataTypes.BOOLEAN,
     },
+    fixtureId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   },
   {
     sequelize,

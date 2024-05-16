@@ -5,7 +5,7 @@ const {
   fixtureUrl,
 } = require('../../config/football-api-config.js');
 const Match = require('../../models/match.js');
-const { createMatchFromFixture } = require('../utils/matches-utils.js');
+const { createOrUpdateMatchFromFixture } = require('../utils/matches-utils.js');
 
 const getNextFixtures = async () => {
   try {
@@ -16,7 +16,7 @@ const getNextFixtures = async () => {
     const fixtures = await fetch(finalUrlForFixtures, options);
     const finalFixtures = await fixtures.json();
 
-    const promises = finalFixtures.response.map(createMatchFromFixture);
+    const promises = finalFixtures.response.map(createOrUpdateMatchFromFixture);
 
     await Promise.all(promises);
 

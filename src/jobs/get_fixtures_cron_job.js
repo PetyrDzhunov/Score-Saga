@@ -3,7 +3,7 @@ const { getNextFixtures } = require('../services/match-service');
 
 // cron-job running to fetch fixtures for next week from football-api and save it into DB every 3 days
 //*/10 * * * * *
-const getFixturesCronJob = cron.schedule('0 0 */3 * *', async () => {
+const getFixturesCronJob = cron.schedule('*/30 * * * * *', async () => {
   try {
     console.log('Running job to fetch fixtures and create matches...');
     await getNextFixtures();

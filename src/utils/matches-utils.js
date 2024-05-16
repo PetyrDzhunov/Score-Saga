@@ -1,3 +1,5 @@
+const Match = require('../../models/match');
+
 function getCurrentYear() {
   const now = new Date();
   const currentMonth = now.getMonth() + 1;
@@ -6,23 +8,43 @@ function getCurrentYear() {
   return currentMonth >= 8 ? currentYear : currentYear - 1;
 }
 
-const createMatchFromFixture = (object) => {
+const createOrUpdateMatchFromFixture = async (object) => {
   const { fixture, teams, goals } = object;
-  const { venue, status } = fixture;
+  const { venue, status, id } = fixture;
   const { home, away } = teams;
 
-  return Match.create({
-    venue: venue.name,
-    status: status.short,
-    homeTeamName: home.name,
-    homeTeamLogo: home.logo,
-    homeTeamGoals: goals.home,
-    homeTeamWinner: home.winner,
-    awayTeamName: away.name,
-    awayTeamLogo: away.logo,
-    awayTeamGoals: goals.away,
-    awayTeamWinner: away.winner,
+  const [match, isNewlyCreated] = await Match.findOrCreate({
+    where: { fixtureId: id },
+    defaults: {
+      venue: venue.name,
+      status: status.short,
+      homeTeamName: home.name,
+      homeTeamLogo: home.logo,
+      homeTeamGoals: goals.home,
+      homeTeamWinner: home.winner,
+      awayTeamName: away.name,
+      awayTeamLogo: away.logo,
+      awayTeamGoals: goals.away,
+      awayTeamWinner: away.winner,
+    },
   });
+
+  if (!isNewlyCreated) {
+    match.update({
+      venue: venue.name,
+      status: status.short,
+      homeTeamName: home.name,
+      homeTeamLogo: home.logo,
+      homeTeamGoals: goals.home,
+      homeTeamWinner: home.winner,
+      awayTeamName: away.name,
+      awayTeamLogo: away.logo,
+      awayTeamGoals: goals.away,
+      awayTeamWinner: away.winner,
+    });
+  }
+
+  return match;
 };
 
-module.exports = { createMatchFromFixture, getCurrentYear };
+module.exports = { createOrUpdateMatchFromFixture, getCurrentYear };
