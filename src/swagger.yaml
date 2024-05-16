@@ -24,6 +24,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+  /users/register:
     post:
       summary: Register a new user
       description: Register a new user with the provided information.
@@ -219,7 +220,7 @@ paths:
           description: Not Found. User or match not found.
         '409':
           description: Conflict. User can have only one prediction per match.
-  /predictions/{id}: # Updated endpoint path
+  /predictions/{id}:
     delete:
       security:
         - bearerAuth: []
@@ -237,6 +238,44 @@ paths:
       responses:
         '204':
           description: Prediction deleted successfully.
+  /matches:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Get all matches in the database
+      description: Retrieve all matches from all fetched fixtures
+      tags:
+        - Match
+      responses:
+        '201':
+          description: Matched fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+  /matches/{id}:
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the prediction to delete.
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      summary: Get single match from the database
+      description: Retrieve a single match
+      tags:
+        - Match
+      responses:
+        '201':
+          description: Match fetched sucessfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -304,3 +343,36 @@ components:
         - userId
         - prediction
         - matchId
+    Match:
+      type: object
+      properties:
+        venue:
+          type: string
+          description: The venue that the match will be played
+        status:
+          type: string
+          description: The status of the match.
+        homeTeamName:
+          type: string
+          description: The name of the home team
+        homeTeamLogo:
+          type: string
+          description: The logo of the home team
+        homeTeamGoals:
+          type: number
+          description: Number of goals scored by home team
+        homeTeamWinner:
+          type: boolean
+          description: Boolean that returns if the home team wins
+        awayTeamName:
+          type: string
+          description: The name of the away team
+        awayTeamLogo:
+          type: string
+          description: The logo of the away team
+        awayTeamGoals:
+          type: number
+          description: Number of goals scored by away team
+        awayTeamWinner:
+          type: boolean
+          description: Boolean that returns if the away team wins
