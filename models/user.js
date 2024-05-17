@@ -29,6 +29,18 @@ User.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    totalPredictions: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    successfulPredictions: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    successRate: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

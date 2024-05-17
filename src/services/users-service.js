@@ -6,8 +6,10 @@ const {
   isValidEmail,
   isValidUsername,
   generateToken,
+  isPredictionSuccessful,
 } = require('../utils/users-utils.js');
 const { CustomError, handleError } = require('../utils/error-utils.js');
+const Match = require('../../models/match.js');
 
 const getAllUsers = async () => {
   try {
@@ -102,6 +104,53 @@ const getAllPredictionsForUser = async (userId) => {
   }
 };
 
+// Calculate and update success rate for each user
+const calculateUserSucessRate = async () => {
+  try {
+    const allUsers = await getAllUsers();
+    for (const user of allUsers) {
+      const predictions = await user.getPredictions({
+        include: [
+          {
+            model: Match,
+            as: 'Match',
+          },
+        ],
+      });
+      let newSuccessfulPredictions = 0;
+      let newTotalPredictions = 0;
+      for (const prediction of predictions) {
+        const match = prediction.Match;
+        if (match && match.status === 'FT' && !prediction.checked) {
+          if (isPredictionSuccessful(prediction)) {
+            newSuccessfulPredictions++;
+          }
+          newTotalPredictions++;
+          prediction.checked = true;
+          await prediction.save();
+        }
+      }
+
+      user.totalPredictions += newTotalPredictions;
+      user.successfulPredictions += newSuccessfulPredictions;
+
+      const successRate = user.successfulPredictions / user.totalPredictions;
+
+      if (user.totalPredictions === 0) {
+        user.successRate = 0;
+      }
+
+      if (!isNaN(successRate)) {
+        user.successRate = successRate;
+      }
+
+      await user.save();
+    }
+  } catch (err) {
+    handleError(err);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -110,4 +159,5 @@ module.exports = {
   getUserByUsername,
   deleteOneUser,
   getAllPredictionsForUser,
+  calculateUserSucessRate,
 };

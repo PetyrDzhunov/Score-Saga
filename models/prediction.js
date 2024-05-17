@@ -14,7 +14,12 @@ Prediction.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    checked: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
+
   {
     sequelize,
     modelName: 'Prediction',

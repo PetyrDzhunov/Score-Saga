@@ -22,4 +22,21 @@ const generateToken = (user) => {
   return token;
 };
 
-module.exports = { isValidEmail, isValidUsername, generateToken };
+const isPredictionSuccessful = (prediction) => {
+  // Implement your logic to determine if the prediction was successful
+  const { prediction: finalPrediction, Match } = prediction;
+  return (
+    (finalPrediction === 'X' &&
+      !Match.homeTeamWinner &&
+      !Match.homeTeamWinner) ||
+    (finalPrediction === '1' && Match.homeTeamWinner) ||
+    (finalPrediction === '2' && Match.awayTeamWinner)
+  );
+};
+
+module.exports = {
+  isValidEmail,
+  isValidUsername,
+  generateToken,
+  isPredictionSuccessful,
+};
