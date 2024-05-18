@@ -19,6 +19,15 @@ const getAllUsers = async () => {
   }
 };
 
+const getSortedAllusers = async (sortType) => {
+  try {
+    return await User.findAll({
+      order: [['successRate', sortType]],
+    });
+  } catch (err) {
+    handleError(err);
+  }
+};
 const getUserByUsername = async (username) => {
   try {
     return await User.findOne({ where: { username } });
@@ -104,7 +113,6 @@ const getAllPredictionsForUser = async (userId) => {
   }
 };
 
-// Calculate and update success rate for each user
 const calculateUserSucessRate = async () => {
   try {
     const allUsers = await getAllUsers();
@@ -164,4 +172,5 @@ module.exports = {
   deleteOneUser,
   getAllPredictionsForUser,
   calculateUserSucessRate,
+  getSortedAllusers,
 };
