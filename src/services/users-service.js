@@ -109,14 +109,7 @@ const calculateUserSucessRate = async () => {
   try {
     const allUsers = await getAllUsers();
     for (const user of allUsers) {
-      const predictions = await user.getPredictions({
-        include: [
-          {
-            model: Match,
-            as: 'Match',
-          },
-        ],
-      });
+      const predictions = await getUserPredictionsWithMatchInformation(user);
       let newSuccessfulPredictions = 0;
       let newTotalPredictions = 0;
       for (const prediction of predictions) {
@@ -149,6 +142,17 @@ const calculateUserSucessRate = async () => {
   } catch (err) {
     handleError(err);
   }
+};
+
+const getUserPredictionsWithMatchInformation = async (user) => {
+  return await user.getPredictions({
+    include: [
+      {
+        model: Match,
+        as: 'Match',
+      },
+    ],
+  });
 };
 
 module.exports = {
