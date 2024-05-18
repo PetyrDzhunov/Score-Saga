@@ -26,6 +26,7 @@ Score Saga API is a RESTful API built with Express.js and PostgreSQL as the data
 ### Prediction Endpoints (requires authorization)
 - `GET /predictions` - Retrieve a list of all predictions.
 - `POST /predictions` - Create a new prediction.
+- `PUT /predictions/{id}` - Update a prediction.
 - `DELETE /predictions/delete/{id}` - Delete a prediction by ID.
 
 ### Match Endpoints (requires authorization)
