@@ -7,7 +7,7 @@
     "start": "nodemon src/app.js",
     "seed": "sequelize db:seed:all",
     "migrate": "npx sequelize-cli db:migrate",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --config --forceExit"
   },
   "author": "",
   "license": "ISC",
@@ -29,7 +29,9 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/pg": "^8.11.5",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.0",
+    "supertest": "^7.0.0",
     "typescript": "^5.4.5"
   }
 }

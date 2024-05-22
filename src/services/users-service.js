@@ -7,6 +7,7 @@ const {
   isValidUsername,
   generateToken,
   isPredictionSuccessful,
+  isInvalidPassword,
 } = require('../utils/users-utils.js');
 const { CustomError, handleError } = require('../utils/error-utils.js');
 const Match = require('../../models/match.js');
@@ -47,6 +48,10 @@ const getOneUserById = async (id) => {
 const registerUser = async (username, email, password, avatar) => {
   if (!isValidUsername(username) || !isValidEmail(email)) {
     throw new CustomError('Username or email is wrong!', 500);
+  }
+
+  if (isInvalidPassword(password)) {
+    throw new CustomError('Password is too short', 500);
   }
 
   const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);

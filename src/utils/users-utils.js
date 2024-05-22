@@ -1,4 +1,7 @@
 const jwt = require('jsonwebtoken');
+const { MINIMUM_PASSWORD_LENGTH, JWT_EXPIRE_TIME } = require('../constants');
+
+process.env.JWT_SECRET = 'test_secret_key';
 
 const isValidUsername = (username) => {
   const usernameRegex = /^[a-zA-Z0-9_-]{3,16}$/;
@@ -10,6 +13,10 @@ const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
+const isInvalidPassword = (password) => {
+  return password.length < MINIMUM_PASSWORD_LENGTH;
+};
+
 const generateToken = (user) => {
   const payload = {
     id: user.id,
@@ -17,13 +24,14 @@ const generateToken = (user) => {
     email: user.email,
   };
 
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: JWT_EXPIRE_TIME,
+  });
 
   return token;
 };
 
 const isPredictionSuccessful = (prediction) => {
-  // Implement your logic to determine if the prediction was successful
   const { prediction: finalPrediction, Match } = prediction;
   return (
     (finalPrediction === 'X' &&
@@ -39,4 +47,5 @@ module.exports = {
   isValidUsername,
   generateToken,
   isPredictionSuccessful,
+  isInvalidPassword,
 };

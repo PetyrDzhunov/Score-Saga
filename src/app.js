@@ -28,3 +28,5 @@ app.listen(process.env.PORT, () => {
   getFixturesCronJob.start();
   calculateSuccessRateCronJob.start();
 });
+
+module.exports = app;
