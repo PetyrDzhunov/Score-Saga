@@ -18,17 +18,17 @@ const invalidPasswordUser = {
 
 const invalidEmailUser = {
   id: UUIDV4(),
-  username: 'perfectUser',
-  email: 'perfectUser@.com',
+  username: 'notInDb',
+  email: 'notInDb@.com',
   password: '12345',
   avatar: 'avatar1.png',
 };
 
-const invalidUsernames = [
+const invalidAndNotInDbUsernames = [
   {
     id: UUIDV4(),
     username: 'as', //short
-    email: 'perfectUser@gmail.com',
+    email: 'notInDb1@gmail.com',
     password: '12345',
     avatar: 'avatar1.png',
   },
@@ -36,14 +36,14 @@ const invalidUsernames = [
   {
     id: UUIDV4(),
     username: 'asdasdasdasdasdas', // long
-    email: 'perfectUser@gmail.com',
+    email: 'notInDb43@gmail.com',
     password: '12345',
     avatar: 'avatar1.png',
   },
   {
     id: UUIDV4(),
     username: 'asd##@!!#@$$', // symbols
-    email: 'perfectUser@gmail.com',
+    email: 'notInDb23@gmail.com',
     password: '12345',
     avatar: 'avatar1.png',
   },
@@ -53,5 +53,5 @@ module.exports = {
   sucessfullUser,
   invalidPasswordUser,
   invalidEmailUser,
-  invalidUsernames,
+  invalidAndNotInDbUsernames,
 };

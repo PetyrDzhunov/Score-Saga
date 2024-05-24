@@ -3,7 +3,7 @@ const request = require('supertest');
 const {
   invalidEmailUser,
   invalidPasswordUser,
-  invalidUsernames,
+  invalidAndNotInDbUsernames,
   sucessfullUser,
 } = require('../__mocks__/user.mocks');
 const { deleteOneUser } = require('../services/users-service');
@@ -62,7 +62,7 @@ describe('POST /users/register', () => {
     await deleteOneUser(response.body.user.id);
   });
 
-  test.each(invalidUsernames)(
+  test.each(invalidAndNotInDbUsernames)(
     'should throw custom error with invalid username',
     async ({ description, userData }) => {
       const response = await request(app)
@@ -126,9 +126,24 @@ describe('POST /users/login', () => {
     password: sucessfullUser.password,
   };
 
+  const loginWithWrongPassword = {
+    usernameOrEmail: sucessfullUser.username,
+    password: 'wrong password',
+  };
+
   const loginUserDataWithEmail = {
     usernameOrEmail: sucessfullUser.email,
     password: sucessfullUser.password,
+  };
+
+  const loginWithNotExistingUsername = {
+    usernameOrEmail: 'random123',
+    password: 'random',
+  };
+
+  const loginWithNotExistingEmail = {
+    usernameOrEmail: 'random123@gmail.com',
+    password: 'random',
   };
 
   it('login as expected with valid username and password', async () => {
@@ -148,28 +163,55 @@ describe('POST /users/login', () => {
     expect(response.body).toHaveProperty('token');
   });
 
-  // test.each(invalidUsernames)(
-  //   'should throw custom error with invalid username',
-  //   async ({ description, userData }) => {
-  //     const response = await request(app)
-  //       .post('/users/login')
-  //       .set('Accept', 'application/json')
-  //       .send(userData);
+  it('login as expected with valid email and password', async () => {
+    const response = await request(app)
+      .post('/users/login')
+      .set('Accept', 'application/json')
+      .send(loginUserDataWithEmail);
+    expect(response.headers['content-type']).toMatch(/json/);
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('user');
+    expect(response.body.user).toHaveProperty(
+      'username',
+      sucessfullUser.username,
+    );
+    expect(response.body.user).toHaveProperty('email', sucessfullUser.email);
+    expect(response.body.user).toHaveProperty('avatar', sucessfullUser.avatar);
+    expect(response.body).toHaveProperty('token');
+  });
 
-  //     expect(response.body.error.message).toBe('Username or email is wrong!');
-  //     expect(response.body.error.status).toBe(500);
-  //   },
-  // );
+  it('should throw error with not existing username - User not found', async () => {
+    const response = await request(app)
+      .post('/users/login')
+      .set('Accept', 'application/json')
+      .send(loginWithNotExistingUsername);
 
-  // it('should throw custom error with password less than 6 symbols', async () => {
-  //   const response = await request(app)
-  //     .post('/users/login')
-  //     .set('Accept', 'application/json')
-  //     .send(invalidPasswordUser);
+    expect(response.body.error.message).toBe('User not found!');
+    expect(response.body.error.status).toBe(500);
+    expect(response.body).not.toHaveProperty('token');
+  });
 
-  //   expect(response.body.error.message).toBe('Password is too short');
-  //   expect(response.body.error.status).toBe(500);
-  // });
+  it('should throw error with not existing email - User not found', async () => {
+    const response = await request(app)
+      .post('/users/login')
+      .set('Accept', 'application/json')
+      .send(loginWithNotExistingEmail);
 
-  it('returns status 500 on server error', async () => {});
+    expect(response.body.error.message).toBe('User not found!');
+    expect(response.body.error.status).toBe(500);
+    expect(response.body).not.toHaveProperty('token');
+  });
+
+  it('should throw error with not existing email - User not found', async () => {
+    const response = await request(app)
+      .post('/users/login')
+      .set('Accept', 'application/json')
+      .send(loginWithWrongPassword);
+
+    expect(response.body.error.message).toBe(
+      'Username, email or password is wrong!',
+    );
+    expect(response.body.error.status).toBe(500);
+    expect(response.body).not.toHaveProperty('token');
+  });
 });
