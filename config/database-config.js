@@ -1,5 +1,6 @@
 const { Sequelize } = require('sequelize');
 const { readEnvironmentFile } = require('./envFile');
+const pg = require('pg');
 
 readEnvironmentFile();
 const sequelize = new Sequelize({
@@ -10,6 +11,7 @@ const sequelize = new Sequelize({
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
   ssl: true,
+  dialectModule: pg,
 });
 
 const connectDB = async () => {
