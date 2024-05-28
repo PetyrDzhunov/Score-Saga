@@ -23,8 +23,8 @@ app.use(routes);
 app.use(errorHandler);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server started on port ${process.env.PORT}`);
+app.listen(7600, () => {
+  console.log(`Server started on port ${7600}`);
   getFixturesCronJob.start();
   calculateSuccessRateCronJob.start();
 });
