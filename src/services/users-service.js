@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
 const User = require('../../models/user.js');
-const { SALT_ROUNDS } = require('../constants.js');
+const { SALT_ROUNDS, EXCLUDE_PASSWORD_QUERY } = require('../constants.js');
 const {
   isValidEmail,
   isValidUsername,
@@ -14,7 +14,7 @@ const Match = require('../../models/match.js');
 
 const getAllUsers = async () => {
   try {
-    return await User.findAll();
+    return await User.findAll(EXCLUDE_PASSWORD_QUERY);
   } catch (err) {
     handleError(err);
   }
@@ -24,6 +24,7 @@ const getSortedAllusers = async (sortType) => {
   try {
     return await User.findAll({
       order: [['successRate', sortType]],
+      EXCLUDE_PASSWORD_QUERY,
     });
   } catch (err) {
     handleError(err);
@@ -31,7 +32,7 @@ const getSortedAllusers = async (sortType) => {
 };
 const getUserByUsername = async (username) => {
   try {
-    return await User.findOne({ where: { username } });
+    return await User.findOne({ where: { username } }, EXCLUDE_PASSWORD_QUERY);
   } catch (err) {
     handleError(err);
   }
@@ -39,7 +40,7 @@ const getUserByUsername = async (username) => {
 
 const getOneUserById = async (id) => {
   try {
-    return await User.findByPk(id);
+    return await User.findByPk(id, EXCLUDE_PASSWORD_QUERY);
   } catch (err) {
     handleError(err);
   }

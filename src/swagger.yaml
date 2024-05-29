@@ -6,8 +6,8 @@ info:
   contact:
     email: petar.dzhunov94@gmail.com
 servers:
-  - url: http://localhost:3000/
-
+  - url: http://localhost:5000/
+  - url: https://score-saga-9x6uyb5tk-petyrdzhunovs-projects.vercel.app/
 paths:
   /users:
     get:

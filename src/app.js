@@ -10,9 +10,9 @@ const { swaggerUi } = require('../config/swagger-config.js');
 
 const path = require('path');
 const YAML = require('yamljs');
-
 const swaggerFilePath = path.resolve(__dirname, './swagger.yaml');
 const swaggerDocument = YAML.load(swaggerFilePath);
+
 readEnvironmentFile();
 connectDB();
 
@@ -21,10 +21,11 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(routes);
 app.use(errorHandler);
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.listen(7600, () => {
-  console.log(`Server started on port ${7600}`);
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`Server started on port ${process.env.PORT || 5000}`);
   getFixturesCronJob.start();
   calculateSuccessRateCronJob.start();
 });

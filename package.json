@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon src/app.js",
-    "start:production": "cross-env NODE_ENV=production node src/app.js",
-    "start:local": "cross-env NODE_ENV=development node src/app.js",
+    "start:production": "cross-env NODE_ENV=production nodemon src/app.js",
+    "start:local": "cross-env NODE_ENV=localhost nodemon src/app.js",
     "seed": "sequelize db:seed:all",
     "migrate": "npx sequelize-cli db:migrate",
     "test": "jest --config --forceExit",
@@ -26,7 +26,7 @@
     "psql": "^0.0.1",
     "sequelize": "^6.37.3",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0",
+    "swagger-ui-express": "4.6.3",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
